@@ -2,7 +2,7 @@
 #include "../api/api.h"
 #include <iostream>
 int main() {
-    StockTimeSeries sts(10,"AAPL");
-    BlackScholes bs(31.55,22.75,0.05,3.5,0.5,true);
+    StockTimeSeries sts(5,"AAPL");
+    BlackScholes bs(*(sts.get_prices()),200,0.05,0.014,sts.get_historical_iv(),true);
     std::cout<<bs.get_price()<<"\n";
 }
