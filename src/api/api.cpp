@@ -6,10 +6,8 @@
 #include <nlohmann/json.hpp>
 #include <typeinfo>
 #include <cmath>
-
 using json = nlohmann::json;
-// TODO: We need to be able to grab all historical data in an array
-// Then in helpers have a historical volatility calculation
+
 
 typedef struct Time{
     int hour;
@@ -50,7 +48,7 @@ StockTimeSeries::StockTimeSeries(int deltat, std::string ticker) : deltat(deltat
     for (int i=0;i<deltat-1;i++) {
         *(log_returns+i) = std::log(*(prices+i)/(*(prices+i+1)));
     }
-    
+
     double sum = 0;
     for (int i=0;i<deltat-1;i++) {
         sum+=*(log_returns+i);
