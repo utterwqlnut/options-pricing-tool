@@ -1,6 +1,7 @@
 # Options Pricing Tool
 > This project is an options pricing tool, meant to provide visualizations and options pricing data through black scholes and other pricing models.
 > To get stock time series data, the alpha vantage api is used, and for visualizations we use Matplotplusplus.
+> Required External Libraries: [https://github.com/nlohmann/json], [https://github.com/alandefreitas/matplotplusplus], [https://github.com/libcpr/cpr]
 
 ## Black Scholes Model
 Defined as $C=N(d_1)S-N(d_2)Ke^{-rt}$ and $P=C-S+K*e^{-rt}$. 
