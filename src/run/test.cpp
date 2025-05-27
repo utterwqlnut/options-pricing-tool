@@ -2,6 +2,7 @@
 #include "../api/api.h"
 #include <iostream>
 #include <matplot/matplot.h>
+#include <fstream>
 
 int main() {
     std::string ticker;
@@ -13,7 +14,6 @@ int main() {
     int res;
 
     // Get Inputs
-
     std::cout<<"Enter ticker symbol"<<"\n";
     std::cin>>ticker;
 
@@ -37,21 +37,17 @@ int main() {
 
     StockTimeSeries sts(iv_window,"AAPL");
 
-    // X,Y,Z grids
-
     std::vector<std::vector<double> > option_surface_X;
     std::vector<std::vector<double> > option_surface_Y;
     std::vector<std::vector<double> > option_surface_Z;
-
+    std::vector<std::vector<double> > option_surface_data;
     // LinSpace from min_day to max_day
     for(double day=min_day;day<=max_day;day+=(max_day-min_day)/(double)(res-1)) {
         double upper_price = *(sts.get_prices())+0.5*(*(sts.get_prices()));
         double lower_price = *(sts.get_prices())-0.5*(*(sts.get_prices()));
-        // X,Y,Z rows
         std::vector<double> v_x;
         std::vector<double> v_y;
         std::vector<double> v_z;
-
         // LinSpace from lower_price to upper_price
         for(double strike=lower_price;strike<=upper_price;strike+=(upper_price-lower_price)/(res-1)) {
 
@@ -59,12 +55,14 @@ int main() {
             v_y.push_back(strike);
             v_x.push_back(day);
             v_z.push_back(calc.get_price());
-            break;
+            option_surface_data.push_back({day,strike,calc.get_price()});
         }
         option_surface_X.push_back(v_x);
         option_surface_Y.push_back(v_y);
         option_surface_Z.push_back(v_z);
     }
+
+    // Graph surface
     auto l = matplot::surf(option_surface_X, option_surface_Y, option_surface_Z);
     matplot::xlabel("Days till Expiration");
     matplot::ylabel("Strike Price");
@@ -76,6 +74,16 @@ int main() {
     }
     matplot::show();
 
-    std::cout << "Press ENTER to exit..." << std::endl;
+    std::cout << "Press ENTER to exit and save data to data.txt" << std::endl;
     std::cin.get();
+
+    // Output data to file
+    std::ofstream datafile;
+    datafile.open("data.txt");
+    for(int i=0;i<option_surface_data.size();i++) {
+        datafile<<"Days till Expiration: "<<option_surface_data[i][0]<<" Strike Price "<<option_surface_data[i][1]<<" Option Price "<<option_surface_data[i][2]<<"\n";
+    }
+    datafile.close();
+
+    return 0;
 }

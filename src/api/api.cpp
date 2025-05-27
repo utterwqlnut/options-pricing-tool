@@ -16,7 +16,7 @@ typedef struct Time{
 } Time;
 
 std::string get_daily_json(std::string ticker) {
-    cpr::Response r = cpr::Get(cpr::Url{"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol="+ticker+"&interval=5min&apikey=PWHH9JPBR0HITP8Y"});
+    cpr::Response r = cpr::Get(cpr::Url{"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol="+ticker+"&interval=5min&apikey=GGFXUHYGT68UN2XC"});
     if (r.status_code != 200) {
         return "Invalid Ticker";
     } else {
@@ -25,7 +25,7 @@ std::string get_daily_json(std::string ticker) {
 }
 
 void test_api_connection() {
-    cpr::Response r = cpr::Get(cpr::Url{"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=PWHH9JPBR0HITP8Y"});
+    cpr::Response r = cpr::Get(cpr::Url{"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=GGFXUHYGT68UN2XC"});
     std::cout<<"Status Code\n"<<r.status_code<<"\n";
     std::cout<<"Body\n"<<r.text<<"\n";
 }
