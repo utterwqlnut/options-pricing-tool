@@ -19,4 +19,4 @@ $$dS=\mu S_t dt + \sigma S_t dW_t$$
 
 $$dW_t = \sqrt{dt} \cdot Z$$
 
-Typically $Z ~ N(0,1)$ however in our model Z samples from the user defined pdf.
+Typically $Z \~ N(0,1)$ however in our model Z samples from the user defined pdf.
