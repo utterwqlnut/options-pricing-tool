@@ -16,4 +16,5 @@ We use historical volatility of user-defined window $w$ for implied volatility.
 Numerical technique to approximate option price by simulating many possible stock paths. Unlike typical monte carlo methods which follow the geometric brownian motion, this model will sample from a user-defined probability distribution during the wiener process. This makes the model more generalizable and applicable to different market scenarios.
 
 $$dS=\mu S_t dt + \sigma S_t dW_t$$
-$$dW_t = \sqrt{dt}Z$$
+$$dW_t = \sqrt{dt} \cdot Z$$
+Typically $Z ~ N(0,1)$ however in our model Z samples from the user defined pdf.
