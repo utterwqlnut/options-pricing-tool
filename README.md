@@ -30,5 +30,5 @@ meaning there is some constant c such that $f(x) \leq ch(x)$.
 
 The algorithm then follows
 
-1. Draw candidate $z$ and $\mu$ from $h(x)$
+1. Draw candidate $z$ from $h(x)$ and $\mu$ from $U(0,1)$
 2. If $\mu \leq \frac{f(z)}{ch(z)}$ than $z$ is a valid draw, otherwise go back to 1.
