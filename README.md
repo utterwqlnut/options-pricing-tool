@@ -15,8 +15,20 @@ We use historical volatility of user-defined window $w$ for implied volatility.
 ## Monte Carlo Model (TODO)
 Numerical technique to approximate option price by simulating many possible stock paths. Unlike typical monte carlo methods which follow the geometric brownian motion, this model will sample from a user-defined probability distribution during the wiener process. This makes the model more generalizable and applicable to different market scenarios.
 
+### Wiener Process
 $$dS=\mu S_t dt + \sigma S_t dW_t$$
 
 $$dW_t = \sqrt{dt} \cdot Z$$
 
-Typically $Z \sim N(0,1)$ however in our model Z samples from the user defined pdf.
+Typically $Z \sim N(0,1)$ however in our model Z samples from the user defined distribution.
+
+### Sampling
+Because we need to support a variety of probability distributions, we will be using accept-reject sampling.
+
+Suppose we have an uknown distribution $f(x)$ we wish to sample from. We then use a proposal distribution $h(x)$ (In our case it is a uniform distribution) which is easier to sample from and acts as a container around $f(x)$, 
+meaning there is some constant c such that $f(x) \leq ch(x)$.
+
+The algorithm then follows
+
+1. Draw candidate $z$ and $\mu$ from $h(x)$
+2. If $\mu \leq \frac{f(z)}{ch(z)}$ than $z$ is a valid draw, otherwise go back to 1.
