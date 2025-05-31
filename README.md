@@ -12,10 +12,10 @@ We use historical volatility of user-defined window $w$ for implied volatility.
 
 > Here is a generated visualization for AAPL stock.
 
-## Monte Carlo Model (TODO)
+## Monte Carlo Model (Done)
 Numerical technique to approximate option price by simulating many possible stock paths. Unlike typical monte carlo methods which follow the geometric brownian motion, this model will sample from a user-defined probability distribution during the wiener process. This makes the model more generalizable and applicable to different market scenarios.
 
-### Wiener Process (TODO)
+### Wiener Process (Done)
 $$dS=\mu S_t dt + \sigma S_t dW_t$$
 
 $$dW_t = \sqrt{dt} \cdot Z$$
@@ -32,3 +32,10 @@ The algorithm then follows
 
 1. Draw candidate $z$ from $h(x)$ and $\mu$ from $U(0,1)$
 2. If $\mu \leq \frac{f(z)}{ch(z)}$ than $z$ is a valid draw, otherwise go back to 1.
+
+## Usage
+If you are on a system other than MacOS you may need to edit the MakeFile. To compile and run the script do
+```
+make
+./run
+```
