@@ -37,5 +37,5 @@ The algorithm then follows
 If you are on a system other than MacOS you may need to edit the MakeFile. To compile and run the script do
 ```
 make
-./run
+./run_script
 ```
