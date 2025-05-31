@@ -3,6 +3,8 @@
 #include <iostream>
 #include <matplot/matplot.h>
 #include <fstream>
+#include <string>
+#include "../models/monte_carlo.h"
 
 int main() {
     std::string ticker;
@@ -12,6 +14,9 @@ int main() {
     int max_day;
     int min_day;
     int res;
+    std::string model;
+    int paths;
+    double delta_t;
 
     // Get Inputs
     std::cout<<"Enter ticker symbol"<<"\n";
@@ -35,12 +40,28 @@ int main() {
     std::cout<<"Enter resolution for visualization"<<"\n";
     std::cin>>res;
 
-    StockTimeSeries sts(iv_window,"AAPL");
+    std::cout<<"Which model eg. \"black_scholes\" or \"monte_carlo\""<<"\n";
+    std::cin>>model;
+
+
+    if(!model.compare("monte_carlo")) {
+        std::cout<<"How many paths to evaluate"<<"\n";
+        std::cin>>paths;
+
+        std::cout<<"What is the delta_t for the mc"<<"\n";
+        std::cin>>delta_t;
+
+    }
+
+    StockTimeSeries sts(iv_window,ticker);
 
     std::vector<std::vector<double> > option_surface_X;
     std::vector<std::vector<double> > option_surface_Y;
     std::vector<std::vector<double> > option_surface_Z;
     std::vector<std::vector<double> > option_surface_data;
+
+    Base* calc;
+
     // LinSpace from min_day to max_day
     for(double day=min_day;day<=max_day;day+=(max_day-min_day)/(double)(res-1)) {
         double upper_price = *(sts.get_prices())+0.5*(*(sts.get_prices()));
@@ -50,12 +71,18 @@ int main() {
         std::vector<double> v_z;
         // LinSpace from lower_price to upper_price
         for(double strike=lower_price;strike<=upper_price;strike+=(upper_price-lower_price)/(res-1)) {
-
-            BlackScholes calc(*(sts.get_prices()),strike,annualized_interest_rate,day/365.0,sts.get_historical_iv(),call);
+            if(strike!=lower_price) {
+                delete calc;
+            }
+            if(!model.compare("monte_carlo")) {
+                calc = new MonteCarlo(*(sts.get_prices()),annualized_interest_rate,day/365.0,sts.get_historical_iv(),call,delta_t/365.0, paths, strike);
+            } else {
+                calc = new BlackScholes(*(sts.get_prices()),strike,annualized_interest_rate,day/365.0,sts.get_historical_iv(),call);
+            }
             v_y.push_back(strike);
             v_x.push_back(day);
-            v_z.push_back(calc.get_price());
-            option_surface_data.push_back({day,strike,calc.get_price()});
+            v_z.push_back(calc->get_price());
+            option_surface_data.push_back({day,strike,calc->get_price()});
         }
         option_surface_X.push_back(v_x);
         option_surface_Y.push_back(v_y);

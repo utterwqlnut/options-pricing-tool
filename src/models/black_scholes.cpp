@@ -21,6 +21,6 @@
         return k*std::exp(-r*t)-s+call_price();
     }
 
-    double BlackScholes::get_price() const{
+    double BlackScholes::get_price() const {
         return price;
     }
