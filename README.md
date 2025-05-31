@@ -39,3 +39,5 @@ If you are on a system other than MacOS you may need to edit the MakeFile. To co
 make
 ./run_script
 ```
+
+To choose a probability distribution for monte carlo, edit the class "PDF" in helpers/math.cpp filling in the max_density on the PDF, min and max domains of the PDF, and the PDF function.
