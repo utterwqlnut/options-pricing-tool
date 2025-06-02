@@ -32,8 +32,7 @@ void test_api_connection() {
 
 
 StockTimeSeries::StockTimeSeries(int deltat, std::string ticker) : deltat(deltat), ticker(ticker)  {
-    prices = (double*) std::malloc(sizeof(double)*deltat);
-    double* log_returns = (double*) std::malloc(sizeof(double)*(deltat-1));
+    std::vector<double> log_returns;
     json data = json::parse(get_daily_json(ticker))["Time Series (Daily)"];
     
     int count = 0;
@@ -41,30 +40,30 @@ StockTimeSeries::StockTimeSeries(int deltat, std::string ticker) : deltat(deltat
         if(count==deltat) {
             break;
         }
-        *(prices+count) = std::stod((*it)["4. close"].dump().substr(1,-1));
+        prices.push_back(std::stod((*it)["4. close"].dump().substr(1,-1)));
         count++;
     }
 
     for (int i=0;i<deltat-1;i++) {
-        *(log_returns+i) = std::log(*(prices+i)/(*(prices+i+1)));
+        log_returns.push_back(std::log(prices[i]/(prices[i+1])));
     }
 
     double sum = 0;
     for (int i=0;i<deltat-1;i++) {
-        sum+=*(log_returns+i);
+        sum+=log_returns[i];
     }
     double mean = sum/(deltat-1);
 
     double sum_diff_sq = 0;
     for (int i=0;i<deltat-1;i++) {
-        sum_diff_sq+=(*(log_returns+i)-mean)*(*(log_returns+i)-mean);
+        sum_diff_sq+=(log_returns[i]-mean)*(log_returns[i]-mean);
     }
 
     historical_iv = std::sqrt(sum_diff_sq/(deltat-2))*std::sqrt(252);
     
 }
 
-double* StockTimeSeries::get_prices() {
+std::vector<double> StockTimeSeries::get_prices() {
     return prices;
 }
 double StockTimeSeries::get_historical_iv() {

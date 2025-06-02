@@ -1,4 +1,5 @@
 #include "base.h"
+#include <vector>
 #ifndef MONTE_CARLO_H
 #define MONTE_CARLO_H
 
@@ -15,6 +16,7 @@ class MonteCarlo : public Base{
         int paths;
         double price;
         double k;
+        std::vector<std::vector<double> > paths_v;
 
         double next(double curr_s);
 
@@ -22,5 +24,7 @@ class MonteCarlo : public Base{
         MonteCarlo(double s,double r,double t,double sigma,bool call,double delta_t, int paths, double k);
 
         double get_price() const;
+
+        void graph_paths(std::vector<double> historical_data);
 };
 #endif

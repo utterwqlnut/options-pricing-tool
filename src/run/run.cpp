@@ -55,6 +55,8 @@ int main() {
 
     StockTimeSeries sts(iv_window,ticker);
 
+    std::cout<<"Option Price Surface"<<std::endl;
+
     std::vector<std::vector<double> > option_surface_X;
     std::vector<std::vector<double> > option_surface_Y;
     std::vector<std::vector<double> > option_surface_Z;
@@ -64,8 +66,8 @@ int main() {
 
     // LinSpace from min_day to max_day
     for(double day=min_day;day<=max_day;day+=(max_day-min_day)/(double)(res-1)) {
-        double upper_price = *(sts.get_prices())+0.5*(*(sts.get_prices()));
-        double lower_price = *(sts.get_prices())-0.5*(*(sts.get_prices()));
+        double upper_price = sts.get_prices()[0]+0.5*sts.get_prices()[0];
+        double lower_price = sts.get_prices()[0]-0.5*sts.get_prices()[0];
         std::vector<double> v_x;
         std::vector<double> v_y;
         std::vector<double> v_z;
@@ -75,9 +77,9 @@ int main() {
                 delete calc;
             }
             if(!model.compare("monte_carlo")) {
-                calc = new MonteCarlo(*(sts.get_prices()),annualized_interest_rate,day/365.0,sts.get_historical_iv(),call,delta_t/365.0, paths, strike);
+                calc = new MonteCarlo(sts.get_prices()[0],annualized_interest_rate,day/365.0,sts.get_historical_iv(),call,delta_t/365.0, paths, strike);
             } else {
-                calc = new BlackScholes(*(sts.get_prices()),strike,annualized_interest_rate,day/365.0,sts.get_historical_iv(),call);
+                calc = new BlackScholes(sts.get_prices()[0],strike,annualized_interest_rate,day/365.0,sts.get_historical_iv(),call);
             }
             v_y.push_back(strike);
             v_x.push_back(day);
@@ -100,9 +102,25 @@ int main() {
         matplot::view(60, 30);
     }
     matplot::show();
-
-    std::cout << "Press ENTER to exit and save data to data.txt" << std::endl;
+    std::cout << "Press ENTER to proceed" << std::endl;
     std::cin.get();
+
+    // If Monte Carlo Show Paths Plot
+    if(!model.compare("monte_carlo")) {
+        double strike;
+        double days;
+
+        std::cout<<"Now plotting Monte Carlo Paths"<<std::endl;
+
+        std::cout<<"What strike price?"<<"\n";
+        std::cin>>strike;
+
+        std::cout<<"How many days till expiration?"<<"\n";
+        std::cin>>days;
+
+        MonteCarlo mc_calc(sts.get_prices()[0],annualized_interest_rate,days/365.0,sts.get_historical_iv(),call,delta_t/365.0, paths, strike);
+        mc_calc.graph_paths(sts.get_prices());
+    }
 
     // Output data to file
     std::ofstream datafile;
